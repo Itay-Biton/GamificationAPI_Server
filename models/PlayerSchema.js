@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const PlayerSchema = new mongoose.Schema({
   appID: { type: String, required: true },
@@ -6,8 +6,8 @@ const PlayerSchema = new mongoose.Schema({
   username: { type: String, required: true },
   playerPoints: { type: Number, default: 0 },
   achievementIds: [String],
-});
+})
 
-PlayerSchema.index({ appID: 1, playerID: 1 }, { unique: true });
+PlayerSchema.index({ appID: 1, playerID: 1 }, { unique: true })
 
-module.exports = mongoose.model('Player', PlayerSchema);
+module.exports = mongoose.model('Player', PlayerSchema)

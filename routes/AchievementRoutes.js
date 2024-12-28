@@ -1,73 +1,43 @@
 const express = require('express')
 const router = express.Router()
-const Achievement = require('../models/AchievementSchema')
 const validateRequest = require('../middleware/RequestValidetion')
+const {
+  getAllAchievements,
+  getAchievementByPoints,
+  getAchievementByTitle,
+  getPlayerDoneAchievements,
+  getPlayerTodoAchievements,
+  checkPlayerAchievement,
+  createAchievement,
+  deleteAchievement,
+  updateAchievement,
+} = require('../controllers/AchievementController')
 
 // Get all achievements for a specific app
-router.get('/:appID', validateRequest, async (req, res) => {
-  const { appID } = req.params
+router.get('/:appID', validateRequest, getAllAchievements)
 
-  try {
-    const achievements = await Achievement.find({ appID })
-    if (!achievements) return res.status(404).json({ message: 'Achievements not found' })
+// Get achievement by points needed
+router.get('/:appID/points=:points', validateRequest, getAchievementByPoints)
 
-    res.json(achievements)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-})
+// Get achievement by title
+router.get('/:appID/title=:title', validateRequest, getAchievementByTitle)
 
 // Get player's done achievements
-router.get('/:appID/player=:playerID/done', validateRequest, async (req, res) => {
-  const { appID, playerID } = req.params
-
-  try {
-    const achievements = await Achievement.find({
-      appID,
-      playerIdAchievedList: { $in: [playerID] },
-    })
-
-    res.json(achievements)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-})
+router.get('/:appID/player=:playerID/done', validateRequest, getPlayerDoneAchievements)
 
 // Get player's unfinished achievements
-router.get('/:appID/player=:playerID/todo', validateRequest, async (req, res) => {
-  const { appID, playerID } = req.params
-
-  try {
-    const achievements = await Achievement.find({
-      appID,
-      playerIdAchievedList: { $nin: [playerID] }, // Exclude the player from the list of players who achieved it
-    })
-
-    res.json(achievements)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-})
+router.get('/:appID/player=:playerID/todo', validateRequest, getPlayerTodoAchievements)
 
 // Check if the player has achieved a specific achievement
-router.get('/:appID/player=:playerID/check/:achievementID', validateRequest, async (req, res) => {
-  const { appID, playerID, achievementID } = req.params
+router.get('/:appID/player=:playerID/check/:achievementID', validateRequest, checkPlayerAchievement)
 
-  try {
-    const achievement = await Achievement.findOne({
-      appID,
-      _id: achievementID,
-      playerIdAchievedList: { $in: [playerID] },
-    })
+// Create new achievement
+router.post('/:appID/create', validateRequest, createAchievement)
 
-    if (achievement) {
-      res.json({ value : true }) 
-    } else {
-      res.json({ value : false }) 
-    }
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-})
+// Delete achievement
+router.delete('/:appID/delete/achievement=:achievementID', validateRequest, deleteAchievement)
+
+// Update achievement
+router.put('/:appID/update/achievement=:achievementID', validateRequest, updateAchievement)
 
 module.exports = router
