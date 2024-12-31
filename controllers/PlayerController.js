@@ -109,9 +109,9 @@ const createPlayer = async (req, res) => {
     const player = new Player({
         appID,
         playerID,
-        playerName,
+        username,
         playerPoints,
-        playerAchievements,
+        achievementIds,
     })
     await player.save()
 
