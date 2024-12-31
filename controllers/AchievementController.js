@@ -18,7 +18,7 @@ const getAllAchievements = async (req, res) => {
 // Get achievement by points needed
 const getAchievementByPoints = async (req, res) => {
     const { appID } = req.params
-    const points = parseInt(req.params.points, 10) // Convert points to a number
+    const points = parseInt(req.params.points, 10) 
 
     if (isNaN(points)) {
         return res.status(400).json({ message: 'Points must be a valid number' })

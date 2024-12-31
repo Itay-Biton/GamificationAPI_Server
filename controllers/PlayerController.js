@@ -98,7 +98,7 @@ const decrementPlayerPoints = async (req, res) => {
 // Create player with ID
 const createPlayer = async (req, res) => {
     const { appID, playerID } = req.params
-    const { username = "", playerPoints = 0, achievementIds = [] } = req.body
+    const { username = "New User", playerPoints = 0, achievementIds = [] } = req.body
 
     try {
     // Check if player already exists
@@ -154,7 +154,7 @@ const deletePlayer = async (req, res) => {
 // Set player username
 const setPlayerUsername = async (req, res) => {
     const { appID, playerID } = req.params
-    const { newUsername } = req.query.username
+    const newUsername = req.query.username
 
     try {
         const player = await Player.findOne({ appID, playerID })

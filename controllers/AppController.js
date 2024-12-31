@@ -45,7 +45,7 @@ const deleteApp = async (req, res) => {
 // Set app name
 const setAppName = async (req, res) => {
     const { appID } = req.params
-    const { appName } = req.query 
+    const appName = req.query.appName
 
     if (!appName)
         return res.status(400).json({ message: 'appName is required' })
