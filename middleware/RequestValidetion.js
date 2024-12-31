@@ -13,7 +13,7 @@ const validateRequest = async (req, res, next) => {
     if (!app) 
       return res.status(403).json({ message: 'Invalid appID' })
 
-    const key = await ApiKey.findOne({ apiKey })
+    const key = await ApiKey.findOne({ key: apiKey })
     if (!key) 
       return res.status(403).json({ message: 'Invalid API key' })
     if (key.expiresAt && key.expiresAt < Date.now()) 
