@@ -98,7 +98,7 @@ const decrementPlayerPoints = async (req, res) => {
 // Create player with ID
 const createPlayer = async (req, res) => {
     const { appID, playerID } = req.params
-    const { playerName = "", playerPoints = 0, playerAchievements = [] } = req.body
+    const { username = "", playerPoints = 0, achievementIds = [] } = req.body
 
     try {
     // Check if player already exists
