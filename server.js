@@ -18,10 +18,14 @@ app.get('/', (req, res) => {
 // Import routes
 const playersRoutes = require('./routes/PlayerRoutes');
 const achievementsRoutes = require('./routes/AchievementRoutes');
+const appRoutes = require('./routes/ApprRoutes');
+const apikeyRoutes = require('./routes/ApiKeyRoutes');
 
 // Use routes
 app.use('/players', playersRoutes);
 app.use('/achievements', achievementsRoutes);
+app.use('/app', appRoutes);
+app.use('/apikey', apikeyRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
