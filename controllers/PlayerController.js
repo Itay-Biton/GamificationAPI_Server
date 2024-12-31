@@ -44,7 +44,7 @@ const getPlayerByID = async (req, res) => {
 // Set player points
 const setPlayerPoints = async (req, res) => {
     const { appID, playerID } = req.params
-    const { amount } = parseInt(req.query.amount, 10) || 10
+    const amount = parseInt(req.query.amount, 10) || 1
 
     try {
         const player = await Player.findOne({ appID, playerID })
@@ -62,7 +62,7 @@ const setPlayerPoints = async (req, res) => {
 // Increment player points
 const incrementPlayerPoints = async (req, res) => {
     const { appID, playerID } = req.params
-    const { amount } = parseInt(req.query.amount, 10) || 10
+    const amount = parseInt(req.query.amount, 10) || 1
 
     try {
         const player = await Player.findOne({ appID, playerID })
@@ -80,7 +80,7 @@ const incrementPlayerPoints = async (req, res) => {
 // Decrement player points
 const decrementPlayerPoints = async (req, res) => {
     const { appID, playerID } = req.params
-    const { amount } = parseInt(req.query.amount, 10) || 10
+    const amount = parseInt(req.query.amount, 10) || 1
 
     try {
         const player = await Player.findOne({ appID, playerID })
