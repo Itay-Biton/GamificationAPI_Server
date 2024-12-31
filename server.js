@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 // Import routes
 const playersRoutes = require('./routes/PlayerRoutes');
 const achievementsRoutes = require('./routes/AchievementRoutes');
-const appRoutes = require('./routes/ApprRoutes');
+const appRoutes = require('./routes/AppRoutes');
 const apikeyRoutes = require('./routes/ApiKeyRoutes');
 
 // Use routes
