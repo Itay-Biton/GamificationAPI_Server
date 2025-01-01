@@ -128,7 +128,7 @@ const createAchievement = async (req, res) => {
         await newAchievement.save()
         
         await App.updateOne(
-            { _id: appID },
+            { appID },
             { $push: { achievements: newAchievement.achievementID } }
         )
         
