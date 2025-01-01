@@ -183,7 +183,7 @@ const deletePlayer = async (req, res) => {
 
     // Remove player from App's players array
     await App.updateOne(
-        { _id: appID },
+        { appID },
         { $pull: { players: playerID } }
     )
 

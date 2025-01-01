@@ -98,7 +98,7 @@ const checkPlayerAchievement = async (req, res) => {
     try {
         const achievement = await Achievement.findOne({
             appID,
-            _id: achievementID,
+            achievementID,
             playerIdAchievedList: { $in: [playerID] },
         })
 
@@ -148,7 +148,7 @@ const deleteAchievement = async (req, res) => {
             return res.status(404).json({ message: 'Achievement not found' })
 
         await App.updateOne(
-            { _id: appID },
+            { appID },
             { $pull: { achievements: achievementID } }
         )
 
@@ -158,7 +158,7 @@ const deleteAchievement = async (req, res) => {
             { $pull: { achievementIds: achievementID } } 
         )
 
-        await Achievement.deleteOne({ _id: achievement._id })
+        await Achievement.deleteOne({ achievementID })
 
         res.json({ message: 'Achievement deleted successfully' })
     } catch (err) {
