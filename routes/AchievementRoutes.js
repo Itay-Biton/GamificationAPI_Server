@@ -8,6 +8,8 @@ const {
   getPlayerDoneAchievements,
   getPlayerTodoAchievements,
   checkPlayerAchievement,
+  addAchievement,
+  removeAchievement,
   createAchievement,
   deleteAchievement,
   updateAchievement,
@@ -30,6 +32,12 @@ router.get('/:appID/player=:playerID/todo', validateRequest, getPlayerTodoAchiev
 
 // Check if the player has achieved a specific achievement
 router.get('/:appID/player=:playerID/check/:achievementID', validateRequest, checkPlayerAchievement)
+
+// Add achievement to player
+router.put('/:appID/player=:playerID/achievement=:achievementID/add', validateRequest, addAchievement)
+
+// Remove achievement from player
+router.put('/:appID/player=:playerID/achievement=:achievementID/remove', validateRequest, removeAchievement)
 
 // Create new achievement
 router.post('/:appID/create', validateRequest, createAchievement)

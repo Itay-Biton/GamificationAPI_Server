@@ -8,8 +8,6 @@ const {
   incrementPlayerPoints,
   decrementPlayerPoints,
   setPlayerPoints,
-  addAchievement,
-  removeAchievement,
   createPlayer,
   deletePlayer,
   setPlayerUsername,
@@ -32,12 +30,6 @@ router.post('/:appID/player=:playerID/points/reduce', validateRequest, decrement
 
 // Set points for a player
 router.put('/:appID/player=:playerID/points/set', validateRequest, setPlayerPoints)
-
-// Add achievement to player
-router.put('/:appID/player=:playerID/achievement=:achievementID/add', validateRequest, addAchievement)
-
-// Remove achievement from player
-router.put('/:appID/player=:playerID/achievement=:achievementID/remove', validateRequest, removeAchievement)
 
 // Create new player
 router.post('/:appID/create/player=:playerID', validateRequest, createPlayer)
