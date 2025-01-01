@@ -1,4 +1,6 @@
 const Achievement = require('../models/AchievementSchema')
+const App = require('../models/AppSchema')
+const Player = require('../models/PlayerSchema')
 const { v4: uuidv4 } = require('uuid')
 
 // Get all achievements for a specific app
@@ -6,7 +8,7 @@ const getAllAchievements = async (req, res) => {
     const { appID } = req.params
 
     try {
-        const achievements = await Achievement.find({ appID })
+        const achievements = await Achievement.find({ appID }).sort({ pointsNeeded: 1 })
         if (!achievements) return res.status(404).json({ message: 'Achievements not found' })
 
         res.json(achievements)
@@ -65,7 +67,7 @@ const getPlayerDoneAchievements = async (req, res) => {
         const achievements = await Achievement.find({
             appID,
             playerIdAchievedList: { $in: [playerID] },
-        })
+        }).sort({ pointsNeeded: 1 })
 
         res.json(achievements)
     } catch (err) {
@@ -81,7 +83,7 @@ const getPlayerTodoAchievements = async (req, res) => {
         const achievements = await Achievement.find({
             appID,
             playerIdAchievedList: { $nin: [playerID] },
-        })
+        }).sort({ pointsNeeded: 1 })
 
         res.json(achievements)
     } catch (err) {

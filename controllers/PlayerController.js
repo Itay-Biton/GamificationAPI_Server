@@ -1,4 +1,5 @@
 const Player = require('../models/PlayerSchema')
+const Achievement = require('../models/AchievementSchema')
 
 // Get all players
 const getAllPlayers = async (req, res) => {
@@ -95,6 +96,56 @@ const decrementPlayerPoints = async (req, res) => {
     }
 }
 
+// Add achievement to player
+const addAchievement = async (req, res) => {
+    const { appID, playerID, achievementID } = req.params
+
+    const achievement = await Achievement.findOne({ appID, achievementID })
+    if (!achievement) return res.status(404).json({ message: 'Achievement not found' })
+
+    try {
+        const player = await Player.findOne({ appID, playerID })
+        if (!player) return res.status(404).json({ message: 'Player not found' })
+
+        if (player.achievementIds.includes(achievementID)) {
+            return res.status(400).json({ message: 'Achievement already added' })
+        }
+
+        player.achievementIds.push(achievementID)
+        await player.save()
+
+        res.json({ message: 'Achievement added successfully', player })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
+// Remove achievement from player
+const removeAchievement = async (req, res) => {
+    const { appID, playerID, achievementID } = req.params
+
+    const achievement = await Achievement.findOne({ appID, achievementID })
+    if (!achievement) return res.status(404).json({ message: 'Achievement not found' })
+
+    try {
+        const player = await Player.findOne({ appID, playerID })
+        if (!player) return res.status(404).json({ message: 'Player not found' })
+
+        if (!player.achievementIds.includes(achievementID))
+            return res.status(400).json({ message: 'Achievement wasn\'t added' })
+
+        const index = player.achievementIds.indexOf(achievementID)
+        if (index !== -1) 
+            player.achievementIds.splice(index, 1)
+
+        await player.save()
+
+        res.json({ message: 'Achievement removed successfully', player })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
 // Create player with ID
 const createPlayer = async (req, res) => {
     const { appID, playerID } = req.params
@@ -177,6 +228,8 @@ module.exports = {
     incrementPlayerPoints,
     decrementPlayerPoints,
     setPlayerPoints,
+    addAchievement,
+    removeAchievement,
     createPlayer,
     deletePlayer,
     setPlayerUsername,
