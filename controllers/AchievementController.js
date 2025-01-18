@@ -128,6 +128,9 @@ const addAchievement = async (req, res) => {
         player.achievementIds.push(achievementID)
         await player.save()
 
+        achievement.playerIdsAchieved.push(playerID)
+        await achievement.save()
+
         res.json(player)
     } catch (err) {
         res.status(500).json({ message: err.message })
