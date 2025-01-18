@@ -1,0 +1,60 @@
+extends layout
+
+block content
+  h1 App Analytics
+
+  h2 #{appName}
+  p Total Players: #{playerCount}
+  p Total Achievements: #{achievementCount}
+
+  hr 
+
+  h3 Top 20 Players
+  if topPlayers && topPlayers.length > 0
+    table
+      thead
+        tr
+          th Rank
+          th Username
+          th Points
+      tbody
+        each player, index in topPlayers
+          tr
+            td #{index + 1}
+            td #{player.username}
+            td #{player.playerPoints}
+  else
+    p No players available yet.
+
+  hr
+
+  h3 App Management
+  p ID: #{appID}
+  p App name: #{appName}
+
+  h4 Change App Name
+  form(action=`/app/appName/set` method="post")
+    input(type="text" name="appName" placeholder="Enter new app name" required)
+    button(type="submit") Update Name
+
+  hr
+  
+  h4 Delete App and All Data
+  p.warning This action is irreversible. All data, including players and achievements, will be permanently deleted.
+  form(action=`/app/delete` method="post" onsubmit="return confirmDelete(this)")
+    input(type="text" name="confirmAppName" placeholder="Enter app name to confirm" required)
+    button(type="submit") Delete App
+
+  script.
+    function confirmDelete(form) {
+      const inputName = form.confirmAppName.value.trim()
+      if (!inputName) {
+        alert('Please enter the app name to confirm.')
+        return false
+      }
+      if (inputName !== "#{appName}") {
+        alert('App name confirmation does not match.')
+        return false
+      }
+      return confirm('Are you sure you want to delete this app and all its data? This action is irreversible.')
+    }

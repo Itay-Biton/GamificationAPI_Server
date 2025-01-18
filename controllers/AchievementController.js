@@ -1,7 +1,7 @@
 const Achievement = require('../models/AchievementSchema')
 const App = require('../models/AppSchema')
 const Player = require('../models/PlayerSchema')
-const { v4: uuidv4 } = require('uuid')
+const mongoose = require('mongoose')
 
 // Get all achievements for a specific app
 const getAllAchievements = async (req, res) => {
@@ -29,9 +29,8 @@ const getAchievementByPoints = async (req, res) => {
     try {
         const achievement = await Achievement.findOne({ appID, pointsNeeded: points })
 
-        if (!achievement) {
+        if (!achievement)
             return res.status(404).json({ message: 'Achievement not found' })
-        }
 
         res.json(achievement)
     } catch (err) {
@@ -129,7 +128,7 @@ const addAchievement = async (req, res) => {
         player.achievementIds.push(achievementID)
         await player.save()
 
-        res.json({ message: 'Achievement added successfully', player })
+        res.json(player)
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -155,7 +154,7 @@ const removeAchievement = async (req, res) => {
 
         await player.save()
 
-        res.json({ message: 'Achievement removed successfully', player })
+        res.json(player)
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -163,34 +162,39 @@ const removeAchievement = async (req, res) => {
 
 // Create achievement
 const createAchievement = async (req, res) => {
-    const { appID } = req.params
-    const { title, pointsNeeded } = req.body 
-    
+    const { appID } = req.cookies
+    const { title, pointsNeeded } = req.body
+
     try {
-        const newAchievement = new Achievement({
-            appID,
-            achievementID: uuidv4(),
-            title,
-            pointsNeeded,
-            playerIdsAchieved: [],
+        if (!title || !pointsNeeded) 
+            return res.status(400).json({ message: 'Title and points needed are required.' })
+
+        if (pointsNeeded <= 0) 
+            return res.status(400).json({ message: 'Points needed must be greater than 0.' })
+
+        const newAchievement = new Achievement({ 
+            appID, 
+            achievementID: new mongoose.Types.ObjectId().toString(), 
+            title, 
+            pointsNeeded, 
+            playerIdsAchieved: [] 
         })
-        
         await newAchievement.save()
         
         await App.updateOne(
             { appID },
             { $push: { achievements: newAchievement.achievementID } }
         )
-        
-        res.status(201).json(newAchievement)
+        res.redirect('/achievements')
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ message: 'Internal server error', error: err.message })
     }
 }
 
 // Delete achievement by ID
 const deleteAchievement = async (req, res) => {
-    const { appID, achievementID } = req.params
+    const { appID } = req.cookies
+    const { achievementID } = req.params
 
     try {
         const achievement = await Achievement.findOne({ appID, achievementID })
@@ -209,8 +213,8 @@ const deleteAchievement = async (req, res) => {
         )
 
         await Achievement.deleteOne({ achievementID })
-
-        res.json({ message: 'Achievement deleted successfully' })
+        
+        res.json({ message: 'Success' })
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -218,12 +222,13 @@ const deleteAchievement = async (req, res) => {
 
 // Update achievement by ID
 const updateAchievement = async (req, res) => {
-    const { appID, achievementID } = req.params
+    const { appID } = req.cookies
+    const { achievementID } = req.params
     const { title, pointsNeeded } = req.body 
 
     try {
-        if (!title && pointsNeeded === undefined) 
-            return res.status(400).json({ message: 'At least one field must be provided' })
+        if (!title || !pointsNeeded) 
+            return res.status(400).json({ message: 'Title and points needed are required.' })
 
         const updatedAchievement = await Achievement.findOneAndUpdate(
             { appID, achievementID },
@@ -236,7 +241,8 @@ const updateAchievement = async (req, res) => {
 
         res.json(updatedAchievement)
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        console.error(err)
+        res.status(500).json({ message: 'Internal server error', error: err.message })
     }
 }
 

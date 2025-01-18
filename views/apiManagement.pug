@@ -1,0 +1,50 @@
+extends layout
+
+block content
+  h1 API Management
+
+  if error
+    p.error= error
+
+  if details
+    h2 API Key Details
+    p Key: #{apiKey}
+    p Creation Date: #{new Date(details.creationDate).toLocaleDateString()}
+    if details.expiration
+      p Expiration: #{new Date(details.expiration).toLocaleDateString()}
+    else
+      p Expiration: No Expiration Date
+
+  hr 
+
+  h3 Check API Key Details
+    form(action="/apikey/get" method="post")
+      input(type='text', name='apiKey', placeholder='Enter api key' required)
+      button(type="submit") Check Details
+
+  hr
+
+  form(action="/apikey/new" method="post")
+    h3 Generate New API Key
+    div.radio-group
+      div
+        input(type="radio" name="expiration" id="oneWeek" value="1w" required)
+        label(for="oneWeek") 1 Week
+      div
+        input(type="radio" name="expiration" id="oneMonth" value="1m")
+        label(for="oneMonth") 1 Month
+      div
+        input(type="radio" name="expiration" id="noExpiration" value="none")
+        label(for="noExpiration") No Expiration
+    button(type="submit") Generate New API Key
+
+  hr
+
+  if details
+    h3 Register a New App
+    form(action="/app/new" method="post")
+      input(type='text', name='appName', placeholder='Enter app name' required)
+      button(type="submit") Register New App
+
+    if newAppID
+      p Newly Generated App ID: #{newAppID}

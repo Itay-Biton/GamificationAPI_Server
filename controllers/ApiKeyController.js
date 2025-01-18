@@ -1,21 +1,37 @@
 const ApiKey = require('../models/ApiKeySchema')
-const { v4: uuidv4 } = require('uuid')
+const mongoose = require('mongoose')
 
 // create new api key
 const createApiKey = async (req, res) => {
-    const { expDate } = req.body
+    const { expiration } = req.body
 
+    let expDate = null
+    if (expiration === '1w') 
+        expDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 1 week
+    else if (expiration === '1m')
+        expDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 1 month
+    
     try {
         const newApiKey = new ApiKey({
-            key: uuidv4(),
+            key: new mongoose.Types.ObjectId().toString(),
             createdAt: Date.now(),
-            expiresAt: expDate || null
+            expiresAt: expDate
         })
         await newApiKey.save()
 
-        res.status(201).json(newApiKey) 
+        res.cookie('apiKey', newApiKey.key, { httpOnly: true, sameSite: 'Strict', maxAge: 2 * 60 * 60 * 1000 })
+        res.render('apiManagement', {
+            apiKey: newApiKey.key,
+            details: {
+                creationDate: newApiKey.createdAt,
+                expiration: newApiKey.expiresAt,
+            },
+        })
     } catch (err) {
-        res.status(500).json({ message: err.message })
+        console.log(err)
+        res.status(500).render('apiManagement', {
+            error: 'An error occurred while creating a new API key. Please try again later.',
+        })
     }
 }
 
@@ -37,13 +53,20 @@ const deleteApiKey = async (req, res) => {
 
 // Get api key by key
 const getApiKey = async (req, res) => {
-    const { apiKey } = req.params
+    const { apiKey } = req.body
 
     try {
         const apiKeyToGet = await ApiKey.findOne({ key: apiKey }) 
         if (!apiKeyToGet) return res.status(404).json({ message: 'Api key not found' })
 
-        res.json({ apiKeyToGet })
+        res.cookie('apiKey', apiKeyToGet.key, { httpOnly: true, sameSite: 'Strict', maxAge: 2 * 60 * 60 * 1000 })
+        res.render('apiManagement', {
+            apiKey: apiKeyToGet.key,
+            details: {
+                creationDate: apiKeyToGet.createdAt,
+                expiration: apiKeyToGet.expiresAt,
+            },
+        })
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

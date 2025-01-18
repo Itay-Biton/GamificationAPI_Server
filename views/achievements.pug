@@ -1,0 +1,48 @@
+extends layout
+
+block content
+  h1 Achievements Management
+
+  h2 All Achievements
+  if achievements.length > 0
+    table
+      thead
+        tr
+          th Title
+          th Points Needed
+          th Players Achieved
+          th Actions
+      tbody
+        each achievement in achievements
+          tr(data-id=achievement.achievementID)
+            td(data-field="title")= achievement.title
+            td(data-field="pointsNeeded")= achievement.pointsNeeded
+            if achievement.playerIdsAchieved
+              td= achievement.playerIdsAchieved.length
+            else 
+              td= 0
+            td.action-buttons
+              button(type="button" class="edit-button") Edit
+              button(type="button" class="delete-button" data-id=achievement.achievementID) Delete
+  else
+    p No achievements available.
+
+  hr
+  
+  h2 Create New Achievement
+    form(action="/achievements/create" method="post" onsubmit="return validateForm()")
+      input(type="text" name="title" placeholder="Achievement Title" required)
+      input(type="number" name="pointsNeeded" placeholder="Points Needed" min="1" required id="pointsNeeded")
+      button(type="submit") Create Achievement
+
+    script.
+      function validateForm() {
+        const pointsNeeded = document.getElementById('pointsNeeded').value
+        if (pointsNeeded <= 0) {
+          alert('Points needed must be greater than 0.')
+          return false
+        }
+        return true
+      }
+
+    script(src="/js/achievements.js")

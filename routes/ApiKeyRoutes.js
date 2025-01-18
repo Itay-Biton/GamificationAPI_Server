@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const checkAdminAccess = require('../middleware/AdminAccess')
 const {
     createApiKey,
     deleteApiKey,
@@ -8,12 +7,12 @@ const {
 } = require('../controllers/ApiKeyController')
 
 // Create new api key
-router.post('/new', checkAdminAccess, createApiKey)
+router.post('/new', createApiKey)
 
 // Remove api key
-router.delete('/delete/:apiKey', checkAdminAccess, deleteApiKey)
+router.delete('/delete/:apiKey', deleteApiKey)
 
 // Get api key by key
-router.get('/get/:apiKey', checkAdminAccess, getApiKey)
+router.post('/get', getApiKey)
 
 module.exports = router

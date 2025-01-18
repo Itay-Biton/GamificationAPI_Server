@@ -19,12 +19,12 @@ const getTopPlayers = async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 10
 
     try {
-    const players = await Player.find({ appID })
-        .sort({ playerPoints: -1 })
-        .limit(limit)
-    res.json(players)
+        const players = await Player.find({ appID })
+            .sort({ playerPoints: -1 })
+            .limit(limit)
+        res.json(players)
     } catch (err) {
-    res.status(500).json({ message: err.message })
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -34,7 +34,8 @@ const getPlayerByID = async (req, res) => {
 
     try {
         const player = await Player.findOne({ appID, playerID })
-        if (!player) return res.status(404).json({ message: 'Player not found' })
+        if (!player) 
+            return res.status(404).json({ message: 'Player not found' })
 
         res.json(player)
     } catch (err) {
@@ -49,12 +50,13 @@ const setPlayerPoints = async (req, res) => {
 
     try {
         const player = await Player.findOne({ appID, playerID })
-        if (!player) return res.status(404).json({ message: 'Player not found' })
+        if (!player) 
+            return res.status(404).json({ message: 'Player not found' })
 
         player.playerPoints = amount
         await player.save()
 
-        res.json({ message: 'Points set successfully', player })
+        res.json(player)
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -67,12 +69,13 @@ const incrementPlayerPoints = async (req, res) => {
 
     try {
         const player = await Player.findOne({ appID, playerID })
-        if (!player) return res.status(404).json({ message: 'Player not found' })
+        if (!player) 
+            return res.status(404).json({ message: 'Player not found' })
 
         player.playerPoints += amount
         await player.save()
 
-        res.json({ message: 'Points incremented successfully', player })
+        res.json(player)
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -85,12 +88,13 @@ const decrementPlayerPoints = async (req, res) => {
 
     try {
         const player = await Player.findOne({ appID, playerID })
-        if (!player) return res.status(404).json({ message: 'Player not found' })
+        if (!player) 
+            return res.status(404).json({ message: 'Player not found' })
 
         player.playerPoints -= amount
         await player.save()
 
-        res.json({ message: 'Points decremented successfully', player })
+        res.json(player)
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -102,23 +106,27 @@ const createPlayer = async (req, res) => {
     const { username = "New User", playerPoints = 0, achievementIds = [] } = req.body
 
     try {
-    // Check if player already exists
-    const existingPlayer = await Player.findOne({ appID, playerID })
-    if (existingPlayer)
-        return res.status(400).json({ message: 'Player already exists' })
+        const existingPlayer = await Player.findOne({ appID, playerID })
+        if (existingPlayer)
+            return res.status(400).json({ message: 'Player already exists' })
 
-    const player = new Player({
-        appID,
-        playerID,
-        username,
-        playerPoints,
-        achievementIds,
-    })
-    await player.save()
-
-    res.status(201).json(player)
-    } catch (err) {
-    res.status(500).json({ message: err.message })
+        const player = new Player({
+            appID,
+            playerID,
+            username,
+            playerPoints,
+            achievementIds,
+        })
+        await player.save()
+        
+        await App.updateOne(
+            { appID },
+            { $push: { players: player.playerID } }
+        )
+        res.status(201).json(player)
+    } 
+    catch (err) {
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -127,28 +135,27 @@ const deletePlayer = async (req, res) => {
     const { appID, playerID } = req.params
 
     try {
-    // Find the player
-    const player = await Player.findOne({ appID, playerID })
-    if (!player) return res.status(404).json({ message: 'Player not found' })
+        const player = await Player.findOne({ appID, playerID })
+        if (!player) 
+            return res.status(404).json({ message: 'Player not found' })
 
-    // Remove player from App's players array
-    await App.updateOne(
-        { appID },
-        { $pull: { players: playerID } }
-    )
+        // Remove player from App's players array
+        await App.updateOne(
+            { appID },
+            { $pull: { players: playerID } }
+        )
 
-    // For each of the player's achievements, remove the player ID from the playerIdsAchieved array
-    await Achievement.updateMany(
-        { appID, playerIdAchievedList: { $in: [playerID] } },
-        { $pull: { playerIdAchievedList: playerID } }
-    )
+        // For each of the player's achievements, remove the player ID from the playerIdsAchieved array
+        await Achievement.updateMany(
+            { appID, playerIdAchievedList: { $in: [playerID] } },
+            { $pull: { playerIdAchievedList: playerID } }
+        )
 
-    // Delete the player from the Players collection
-    await Player.deleteOne({ _id: player._id })
+        await Player.deleteOne({ _id: player._id })
 
-    res.json({ message: 'Player deleted successfully' })
+        res.json({ value : true })
     } catch (err) {
-    res.status(500).json({ message: err.message })
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -159,12 +166,13 @@ const setPlayerUsername = async (req, res) => {
 
     try {
         const player = await Player.findOne({ appID, playerID })
-        if (!player) return res.status(404).json({ message: 'Player not found' })
+        if (!player) 
+            return res.status(404).json({ message: 'Player not found' })
 
         player.username = newUsername
         await player.save()
 
-        res.json({ message: 'Username set successfully', player })
+        res.json(player)
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

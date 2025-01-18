@@ -1,0 +1,258 @@
+/* Define Color Variables */
+:root {
+  --main-color: #81cea0; /* Pastel light green */
+  --main-hover-color: #80bd97; /* Darker shade for hover */
+  --text-color: #333;
+  --error-color: #f44336;
+}
+
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+header {
+  background: var(--main-color);
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+nav ul li {
+  margin: 0 1rem;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Main and Footer */
+main {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding-bottom: 4rem; /* Space for footer */
+}
+
+footer {
+  text-align: center;
+  padding: 0.2rem;
+  background: var(--main-color);
+  color: #fff;
+  width: 100%;
+}
+
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+/* Form Styles */
+form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input, button, select {
+  padding: 0.8rem;
+  width: 50%;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Buttons */
+button {
+  background: var(--main-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  width: 30%; 
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover {
+  background: var(--main-hover-color);
+}
+
+.warning {
+  color: red;
+  font-weight: bold;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+table thead {
+  background: #629f7b; 
+  color: white;
+}
+
+table th, table td {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+table tbody tr:hover {
+  background: #f1f1f1;
+}
+
+/* Buttons and Actions */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+button.edit-button, button.save-button {
+  background-color: #88d1c4; 
+  width: 100px; /* Fixed width for uniformity */
+  height: 40px; /* Fixed height for uniformity */
+}
+
+button.edit-button:hover, button.save-button:hover {
+  background-color: #68cfb0; 
+}
+
+button.delete-button, button.cancel-button {
+  background-color: #d5a8a8; 
+  width: 100px; /* Fixed width for uniformity */
+  height: 40px; /* Fixed height for uniformity */
+}
+
+button.delete-button:hover, button.cancel-button:hover {
+  background-color: #c99090;
+}
+
+/* Error and Success Messages */
+.error {
+  color: red;
+  font-weight: bold;
+  background: #ffe5e5;
+  padding: 1rem;
+  border: 1px solid #ff9999;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+/* Specific Layout Styles */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+h2, h3, h4 {
+  color: #4CAF50;
+  margin-top: 1rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+/* Miscellaneous */
+p.warning {
+  font-size: 1rem;
+  color: #f44336;
+}
+
+ul {
+  padding-left: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  main {
+      padding: 1rem;
+  }
+
+  header {
+      font-size: 1rem;
+  }
+
+  nav ul {
+      flex-direction: column;
+      gap: 0.5rem;
+  }
+}
+
+/* Custom Radio Buttons */
+.radio-group {
+  display: flex;
+  gap: 1rem; /* Space between buttons */
+  margin-bottom: 1rem;
+}
+
+input[type="radio"] {
+  display: none; 
+}
+
+input[type="radio"] + label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px; /* Fixed width for uniformity */
+  height: 40px; /* Fixed height */
+  background: white;
+  border: 2px solid var(--main-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="radio"]:checked + label {
+  background: var(--main-color); /* Fill with the main color */
+  color: white; /* Change text color for contrast */
+  border-color: var(--main-hover-color); /* Darker border for selected */
+}
+
+input[type="radio"] + label:hover {
+  border-color: var(--main-hover-color); /* Highlight on hover */
+}

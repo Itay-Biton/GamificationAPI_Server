@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const validateRequest = require('../middleware/RequestValidetion')
+const { requireLogin } = require('../middleware/RequireLogin')
 const {
   getAllAchievements,
   getAchievementByPoints,
@@ -40,12 +41,12 @@ router.put('/:appID/player=:playerID/achievement=:achievementID/add', validateRe
 router.put('/:appID/player=:playerID/achievement=:achievementID/remove', validateRequest, removeAchievement)
 
 // Create new achievement
-router.post('/:appID/create', validateRequest, createAchievement)
+router.post('/create', requireLogin, createAchievement)
 
 // Delete achievement
-router.delete('/:appID/delete/achievement=:achievementID', validateRequest, deleteAchievement)
+router.delete('/delete/achievement=:achievementID', requireLogin, deleteAchievement)
 
 // Update achievement
-router.put('/:appID/update/achievement=:achievementID', validateRequest, updateAchievement)
+router.put('/update/achievement=:achievementID', requireLogin, updateAchievement)
 
 module.exports = router
