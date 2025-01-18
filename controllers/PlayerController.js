@@ -28,6 +28,25 @@ const getTopPlayers = async (req, res) => {
     }
 }
 
+// Get player's rank
+const getPlayerRank = async (req, res) => {
+    const { appID, playerID } = req.params
+
+    try {
+        const player = await Player.findOne({ appID, playerID })
+        if (!player) 
+            return res.status(404).json({ message: 'Player not found' })
+
+        const players = await Player.find({ appID }).sort({ playerPoints: -1 })
+
+        const rank = players.findIndex(p => p.playerID === playerID) + 1
+
+        res.json({ rank })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
 // Get player by ID
 const getPlayerByID = async (req, res) => {
     const { appID, playerID } = req.params
@@ -183,6 +202,7 @@ module.exports = {
     getAllPlayers,
     getPlayerByID,
     getTopPlayers,
+    getPlayerRank,
     incrementPlayerPoints,
     decrementPlayerPoints,
     setPlayerPoints,

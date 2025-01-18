@@ -5,6 +5,7 @@ const {
   getAllPlayers,
   getPlayerByID,
   getTopPlayers,
+  getPlayerRank,
   incrementPlayerPoints,
   decrementPlayerPoints,
   setPlayerPoints,
@@ -21,6 +22,9 @@ router.get('/:appID/player=:playerID', validateRequest, getPlayerByID)
 
 // Get top players
 router.get('/:appID/top', validateRequest, getTopPlayers)
+
+// Get player's rank
+router.get('/:appID/player={playerID}/rank', validateRequest, getPlayerRank)
 
 // Add points to a player
 router.post('/:appID/player=:playerID/points/add', validateRequest, incrementPlayerPoints)
