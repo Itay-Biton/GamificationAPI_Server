@@ -151,11 +151,15 @@ const removeAchievement = async (req, res) => {
         if (!player.achievementIds.includes(achievementID))
             return res.status(400).json({ message: 'Achievement wasn\'t added' })
 
-        const index = player.achievementIds.indexOf(achievementID)
-        if (index !== -1) 
-            player.achievementIds.splice(index, 1)
-
+        const indexA = player.achievementIds.indexOf(achievementID)
+        if (indexA !== -1) 
+            player.achievementIds.splice(indexA, 1)
         await player.save()
+
+        const indexP = achievement.playerIdsAchieved.indexOf(playerID)
+        if (indexP !== -1) 
+            achievement.playerIdsAchieved.splice(indexP, 1)
+        await achievement.save()
 
         res.json(player)
     } catch (err) {
