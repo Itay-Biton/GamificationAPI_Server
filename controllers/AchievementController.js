@@ -98,13 +98,13 @@ const checkPlayerAchievement = async (req, res) => {
         const achievement = await Achievement.findOne({
             appID,
             achievementID,
-            playerIdsAchieved: { $in: [playerID] },
         })
-
-        if (achievement) 
-            res.json( true ) 
-        else 
-            res.json( false ) 
+        
+        if (!achievement) 
+            return res.status(404).json({ message: 'Achievement not found' })
+        
+        const isPlayerAchieved = achievement.playerIdsAchieved.includes(playerID)
+        res.json( isPlayerAchieved )
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

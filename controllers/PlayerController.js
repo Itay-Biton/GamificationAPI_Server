@@ -42,7 +42,7 @@ const getPlayerRank = async (req, res) => {
 
         const rank = players.findIndex(p => p.playerID === playerID) + 1
 
-        res.json( rank )
+        res.status(200).send(rank.toString())
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
