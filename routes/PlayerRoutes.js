@@ -24,7 +24,7 @@ router.get('/:appID/player=:playerID', validateRequest, getPlayerByID)
 router.get('/:appID/top', validateRequest, getTopPlayers)
 
 // Get player's rank
-router.get('/:appID/player=playerID/rank', validateRequest, getPlayerRank)
+router.get('/:appID/player=:playerID/rank', validateRequest, getPlayerRank)
 
 // Add points to a player
 router.post('/:appID/player=:playerID/points/add', validateRequest, incrementPlayerPoints)
