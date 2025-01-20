@@ -65,7 +65,7 @@ const getPlayerDoneAchievements = async (req, res) => {
     try {
         const achievements = await Achievement.find({
             appID,
-            playerIdAchievedList: { $in: [playerID] },
+            playerIdsAchieved: { $in: [playerID] },
         }).sort({ pointsNeeded: 1 })
 
         res.json(achievements)
@@ -81,7 +81,7 @@ const getPlayerTodoAchievements = async (req, res) => {
     try {
         const achievements = await Achievement.find({
             appID,
-            playerIdAchievedList: { $nin: [playerID] },
+            playerIdsAchieved: { $nin: [playerID] },
         }).sort({ pointsNeeded: 1 })
 
         res.json(achievements)
@@ -98,13 +98,13 @@ const checkPlayerAchievement = async (req, res) => {
         const achievement = await Achievement.findOne({
             appID,
             achievementID,
-            playerIdAchievedList: { $in: [playerID] },
+            playerIdsAchieved: { $in: [playerID] },
         })
 
         if (achievement) 
-            res.json({ value : true }) 
+            res.json( true ) 
         else 
-            res.json({ value : false }) 
+            res.json( false ) 
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

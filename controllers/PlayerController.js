@@ -1,5 +1,6 @@
 const Player = require('../models/PlayerSchema')
 const Achievement = require('../models/AchievementSchema')
+const App = require('../models/AppSchema')
 
 // Get all players
 const getAllPlayers = async (req, res) => {
@@ -41,7 +42,7 @@ const getPlayerRank = async (req, res) => {
 
         const rank = players.findIndex(p => p.playerID === playerID) + 1
 
-        res.json({ rank })
+        res.json( rank )
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -125,6 +126,10 @@ const createPlayer = async (req, res) => {
     const { username = "New User", playerPoints = 0, achievementIds = [] } = req.body
 
     try {
+        const existingApp = await App.findOne({ appID })
+        if (!existingApp)
+            return res.status(400).json({ message: 'App with this appID doesn\'t exists' })
+
         const existingPlayer = await Player.findOne({ appID, playerID })
         if (existingPlayer)
             return res.status(400).json({ message: 'Player already exists' })
@@ -154,6 +159,10 @@ const deletePlayer = async (req, res) => {
     const { appID, playerID } = req.params
 
     try {
+        const existingApp = await App.findOne({ appID })
+        if (!existingApp)
+            return res.status(400).json({ message: 'App with this appID doesn\'t exists' })
+        
         const player = await Player.findOne({ appID, playerID })
         if (!player) 
             return res.status(404).json({ message: 'Player not found' })
@@ -166,8 +175,8 @@ const deletePlayer = async (req, res) => {
 
         // For each of the player's achievements, remove the player ID from the playerIdsAchieved array
         await Achievement.updateMany(
-            { appID, playerIdAchievedList: { $in: [playerID] } },
-            { $pull: { playerIdAchievedList: playerID } }
+            { appID, playerIdsAchieved: { $in: [playerID] } },
+            { $pull: { playerIdsAchieved: playerID } }
         )
 
         await Player.deleteOne({ _id: player._id })
