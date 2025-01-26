@@ -50,13 +50,14 @@ app.listen(PORT, () => {
 
 // Function to send a keep-alive request to the server itself
 const sendKeepAliveRequest = async () => {
-  try {
-    const response = await axios.get(`https://gamificationsdk-server.onrender.com/health`)
-    console.log(`Keep-alive successful: ${response.status}`)
-  } catch (error) {
-    console.error('Keep-alive failed:', error.message)
-  }
+  if (process.env.KEEP_ALIVE === "KEEP_ALIVE")
+    try {
+      const response = await axios.get(`https://gamificationsdk-server.onrender.com/health`)
+      console.log(`Keep-alive successful: ${response.status}`)
+    } catch (error) {
+      console.error('Keep-alive failed:', error.message)
+    }
 }
 
 // Send the keep-alive request every 5 minutes
-setInterval(sendKeepAliveRequest, 5 * 60 * 1000)
+setInterval(sendKeepAliveRequest, 5 * 1000)
