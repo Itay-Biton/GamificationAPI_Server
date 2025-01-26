@@ -60,4 +60,4 @@ const sendKeepAliveRequest = async () => {
 }
 
 // Send the keep-alive request every 5 minutes
-setInterval(sendKeepAliveRequest, 5 * 1000)
+setInterval(sendKeepAliveRequest, 5 * 60 * 1000)

@@ -12,6 +12,8 @@ const {
     renderApiManagement,
     renderAnalytics,
     renderAchievements,
+    renderAbout,
+    renderDocs,
 } = require('../controllers/WebPortalController')
 
 // Login Page
@@ -31,5 +33,11 @@ router.get('/analytics', requireLogin, renderAnalytics)
 
 // Achievement Management Page
 router.get('/achievements', requireLogin, renderAchievements)
+
+// About Page
+router.get('/about', renderAbout)
+
+// Documentation Page
+router.get('/docs', renderDocs)
 
 module.exports = router

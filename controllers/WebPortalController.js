@@ -111,6 +111,14 @@ const renderAchievements = async (req, res) => {
     }
 }
 
+const renderAbout = async (req, res) => {
+    res.render('about')
+}
+
+const renderDocs = async (req, res) => {
+    res.render('docs')
+}
+
 // Export all controller methods
 module.exports = {
     renderLogin,
@@ -119,4 +127,6 @@ module.exports = {
     renderApiManagement,
     renderAnalytics,
     renderAchievements,
+    renderAbout,
+    renderDocs,
 }

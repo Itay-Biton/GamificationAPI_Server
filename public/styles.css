@@ -1,39 +1,73 @@
 /* Define Color Variables */
 :root {
-  --main-color: #81cea0; /* Pastel light green */
-  --main-hover-color: #80bd97; /* Darker shade for hover */
+  --main-color: #81cea0; /* Light mode pastel green */
+  --main-hover-color: #80bd97;
   --text-color: #333;
-  --error-color: #f44336;
+  --background-color: #f9f9f9;
+  --border-color: #ddd;
+  --input-bg: #fff;
+}
+
+[data-theme="dark"] {
+  --main-color: #506d63; /* Darker green for dark mode */
+  --main-hover-color: #3e554d;
+  --text-color: #ddd;
+  --background-color: #222; /* Dark background */
+  --border-color: #444;
+  --input-bg: #333;
 }
 
 /* General Styles */
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
+  margin: 0; /* Ensure no default margins */
   padding: 0;
-  background-color: #f9f9f9;
+  background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure body covers the full viewport height */
+}
+
+body, html {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+body > main {
+  flex: 1;
 }
 
 header {
+  width: 100%;
   background: var(--main-color);
-  color: #fff;
-  padding: 1rem;
+  color: white;
   text-align: center;
+  padding: 1rem 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  height: 90px;
 }
 
 header h1 {
+  color: white;
   margin: 0;
   font-size: 1.8rem;
 }
 
+/* Navigation */
 nav ul {
   list-style: none;
   padding: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  margin: 4rem;
   margin-top: 0.5rem;
+  margin-bottom: 0;
 }
 
 nav ul li {
@@ -41,54 +75,39 @@ nav ul li {
 }
 
 nav ul li a {
-  color: #fff;
+  color: white;
   text-decoration: none;
   font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
 nav ul li a:hover {
-  text-decoration: underline;
+  background: var(--main-hover-color);
 }
 
-/* Main and Footer */
+/* Main Content */
 main {
+  flex: 1; /* Make main take available space */
+  margin: 100px auto 0; /* Leave space below the fixed header */
+  max-width: 1000px; /* Limit main content width */
+  width: calc(100% - 2rem); /* Add spacing on small screens */
   padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding-bottom: 4rem; /* Space for footer */
 }
 
+/* Footer */
 footer {
-  text-align: center;
-  padding: 0.2rem;
-  background: var(--main-color);
-  color: #fff;
   width: 100%;
-}
-
-hr {
-  margin-top: 3rem;
-  margin-bottom: 3rem;
-}
-
-/* Form Styles */
-form {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-input, button, select {
-  padding: 0.8rem;
-  width: 50%;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background: var(--main-color);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  margin-top: auto;
 }
 
 /* Buttons */
@@ -101,143 +120,74 @@ button {
   font-size: 1rem;
   border-radius: 4px;
   transition: background-color 0.3s ease;
-  width: 30%; 
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 button:hover {
   background: var(--main-hover-color);
 }
 
-.warning {
-  color: red;
-  font-weight: bold;
+button:disabled {
+  background: var(--border-color);
+  color: var(--text-color);
+  cursor: not-allowed;
 }
 
-/* Table Styles */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-}
-
-table thead {
-  background: #629f7b; 
+button#themeToggle {
+  position: absolute;
+  top: 25%; 
+  right: 1rem; 
+  transform: translateY(-50%);
+  background: var(--main-hover-color);
   color: white;
-}
-
-table th, table td {
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-table tbody tr:hover {
-  background: #f1f1f1;
-}
-
-/* Buttons and Actions */
-.action-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-button.edit-button, button.save-button {
-  background-color: #88d1c4; 
-  width: 100px; /* Fixed width for uniformity */
-  height: 40px; /* Fixed height for uniformity */
-}
-
-button.edit-button:hover, button.save-button:hover {
-  background-color: #68cfb0; 
-}
-
-button.delete-button, button.cancel-button {
-  background-color: #d5a8a8; 
-  width: 100px; /* Fixed width for uniformity */
-  height: 40px; /* Fixed height for uniformity */
-}
-
-button.delete-button:hover, button.cancel-button:hover {
-  background-color: #c99090;
-}
-
-/* Error and Success Messages */
-.error {
-  color: red;
-  font-weight: bold;
-  background: #ffe5e5;
-  padding: 1rem;
-  border: 1px solid #ff9999;
+  border: none;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button#themeToggle:hover {
+  background: var(--main-color);
+}
+
+/* Forms */
+form {
   margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* Specific Layout Styles */
-h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-h2, h3, h4 {
-  color: #4CAF50;
-  margin-top: 1rem;
-}
-
-h3 {
-  font-size: 1.5rem;
-}
-
-h4 {
-  font-size: 1.2rem;
-}
-
-/* Miscellaneous */
-p.warning {
+input, button, select {
+  padding: 0.8rem;
   font-size: 1rem;
-  color: #f44336;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--text-color);
 }
 
-ul {
-  padding-left: 1.2rem;
+input:focus, select:focus {
+  outline: 2px solid var(--main-hover-color);
 }
 
-@media (max-width: 768px) {
-  main {
-      padding: 1rem;
-  }
-
-  header {
-      font-size: 1rem;
-  }
-
-  nav ul {
-      flex-direction: column;
-      gap: 0.5rem;
-  }
-}
-
-/* Custom Radio Buttons */
+/* Radio Buttons */
 .radio-group {
   display: flex;
-  gap: 1rem; /* Space between buttons */
-  margin-bottom: 1rem;
+  gap: 1rem;
 }
 
 input[type="radio"] {
-  display: none; 
+  display: none;
 }
 
 input[type="radio"] + label {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 150px; /* Fixed width for uniformity */
-  height: 40px; /* Fixed height */
-  background: white;
+  width: 150px;
+  height: 40px;
+  background: var(--input-bg);
   border: 2px solid var(--main-color);
   border-radius: 8px;
   color: var(--text-color);
@@ -248,11 +198,87 @@ input[type="radio"] + label {
 }
 
 input[type="radio"]:checked + label {
-  background: var(--main-color); /* Fill with the main color */
-  color: white; /* Change text color for contrast */
-  border-color: var(--main-hover-color); /* Darker border for selected */
+  background: var(--main-color);
+  color: white;
+  border-color: var(--main-hover-color);
 }
 
 input[type="radio"] + label:hover {
-  border-color: var(--main-hover-color); /* Highlight on hover */
+  border-color: var(--main-hover-color);
+}
+
+/* Titles */
+h1, h2, h3, h4 {
+  color: var(--main-color);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+table thead {
+  background: var(--main-color);
+  color: white;
+}
+
+table th, table td {
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+table tbody tr:hover {
+  background: var(--background-color);
+}
+
+/* Miscellaneous */
+.error {
+  color: red;
+  font-weight: bold;
+  background: #ffe5e5;
+  padding: 1rem;
+  border: 1px solid #ff9999;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.warning {
+  color: red;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  main {
+    padding: 1rem;
+  }
+
+  header {
+    font-size: 1rem;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
