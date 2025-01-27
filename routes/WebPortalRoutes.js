@@ -35,9 +35,9 @@ router.get('/analytics', requireLogin, renderAnalytics)
 router.get('/achievements', requireLogin, renderAchievements)
 
 // About Page
-router.get('/about', renderAbout)
+router.get('/about', checkLogin, renderAbout)
 
 // Documentation Page
-router.get('/docs', renderDocs)
+router.get('/docs', checkLogin, renderDocs)
 
 module.exports = router

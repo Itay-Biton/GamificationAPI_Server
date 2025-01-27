@@ -10,11 +10,11 @@ html
         ul
           if loggedIn
             li: a(href="/logout") Logout
+            li: a(href="/api-management") API Management
+            li: a(href="/analytics") App Analytics
+            li: a(href="/achievements") Achievement Management
           else 
             li: a(href="/login") Login
-          li: a(href="/api-management") API Management
-          li: a(href="/analytics") App Analytics
-          li: a(href="/achievements") Achievement Management
           li: a(href="/about") About
           li: a(href="/docs") How To Use
       button#themeToggle Toggle Dark/Light Mode

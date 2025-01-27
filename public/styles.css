@@ -20,14 +20,14 @@
 /* General Styles */
 body {
   font-family: Arial, sans-serif;
-  margin: 0; /* Ensure no default margins */
+  margin: 0;
   padding: 0;
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensure body covers the full viewport height */
+  min-height: 100vh;
 }
 
 body, html {
@@ -50,7 +50,6 @@ header {
   top: 0;
   left: 0;
   z-index: 1000;
-  height: 90px;
 }
 
 header h1 {
@@ -64,21 +63,17 @@ nav ul {
   list-style: none;
   padding: 0;
   display: flex;
-  justify-content: space-between;
-  margin: 4rem;
+  justify-content: center;
   margin-top: 0.5rem;
   margin-bottom: 0;
 }
 
 nav ul li {
-  margin: 0 1rem;
-}
-
+  margin-inline: 1rem;}
 nav ul li a {
   color: white;
   text-decoration: none;
   font-weight: bold;
-  padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
@@ -249,6 +244,35 @@ table th, table td {
 
 table tbody tr:hover {
   background: var(--background-color);
+}
+
+/* Docs */
+ul.docs {
+  list-style: none;
+}
+
+li.docs {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-color: var(--main-color);
+  border-width: 0.5px;
+  border-radius: 4px;
+  border-style: solid;
+}
+
+pre.docs {
+  background-color: var(--main-color);
+  padding: 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+h2.docs {
+  margin-top: 3rem;
+}
+
+h3.docs {
+  margin-left: 2rem;
 }
 
 /* Miscellaneous */

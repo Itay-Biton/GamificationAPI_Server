@@ -2,3 +2,557 @@ extends layout
 
 block content
   h1 How To Use
+    h2.docs Authentication
+
+    p All requests to the API require an `appID` and `api_key` in the request headers for authentication.
+
+    h2.docs Error Handling
+
+    ul.docs
+        li 
+            b 400 Bad Request: 
+            span Invalisd request parameters, missing required fields, or invalisd data.
+        li 
+            b 403 Forbidden: 
+            span Invalisd `appID` or `api_key`, or the API key has expired.
+        li 
+            b 404 Not Found: 
+            span The requested resource (player, achievement, etc.) was not found.
+        li 
+            b 500 Internal Server Error: 
+            span An unexpected error occurred on the server.
+
+    h2.docs Models
+
+    h3.docs PlayerSchema
+    table
+        tr
+            th Field
+            th Type
+            th Description
+        tr
+            td appID
+            td mongoose.Schema.Types.ObjectId
+            td The unique ID of the app.
+        tr
+            td playerID
+            td String
+            td The unique ID of the player.
+        tr
+            td username
+            td String
+            td The player's username.
+        tr
+            td playerPoints
+            td Number
+            td The player's current points.
+        tr
+            td achievementIds
+            td Array of mongoose.Schema.Types.ObjectId
+            td An array of IDs for achievements completed by the player.
+
+    h3.docs AchievementSchema
+    table
+        tr
+            th Field
+            th Type
+            th Description
+        tr
+            td appID
+            td mongoose.Schema.Types.ObjectId
+            td The unique ID of the app.
+        tr
+            td achievementID
+            td mongoose.Schema.Types.ObjectId
+            td The unique ID of the achievement.
+        tr
+            td title
+            td String
+            td The title of the achievement.
+        tr
+            td pointsNeeded
+            td Number
+            td The number of points required to earn the achievement.
+        tr
+            td playerIdsAchieved
+            td Array of Strings
+            td An array of player IDs who have earned this achievement.
+
+    h3.docs AppSchema
+    table
+        tr
+            th Field
+            th Type
+            th Description
+        tr
+            td appID
+            td mongoose.Schema.Types.ObjectId
+            td The unique ID of the app.
+        tr
+            td appName
+            td String
+            td The name of the app.
+        tr
+            td players
+            td Array of Strings
+            td An array of player IDs associated with the app.
+        tr
+            td achievements
+            td Array of mongoose.Schema.Types.ObjectId
+            td An array of achievement IDs associated with the app.
+
+    h2.docs Routes
+
+    h3.docs Players
+
+    ul.docs.routes
+        li.docs 
+            pre.docs
+                | GET /players/:appID 
+            p Get a list of all players for a specific app.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+            p 
+                b Response:
+            pre.docs
+                | [
+                |   {
+                |     "playerID": "player1",
+                |     "username": "Player One",
+                |     "playerPoints": 100,
+                |     "achievementIds": ["achievement1", "achievement2"] 
+                |   },
+                |   { 
+                |     "playerID": "player2",
+                |     "username": "Player Two",
+                |     "playerPoints": 50,
+                |     "achievementIds": ["achievement3"] 
+                |   }
+                | ]
+
+        li.docs 
+            pre.docs
+                | GET /players/:appID/player=:playerID
+            p Get a specific player by ID.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+            p 
+                b Response:
+            pre.docs
+                | {
+                |   "playerID": "player1",
+                |   "username": "Player One",
+                |   "playerPoints": 100,
+                |   "achievementIds": ["achievement1", "achievement2"] 
+                | }
+
+        li.docs 
+            pre.docs
+                | GET /players/:appID/top
+            p Get a list of top players (sorted by points) for a specific app.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td limit
+                    td query
+                    td Optional. The maximum number of players to return (default: 10).
+            p 
+                b Response: 
+                p An array of player objects sorted by `playerPoints` in descending order.
+
+        li.docs 
+            pre.docs
+                | GET /players/:appID/player=:playerID/rank 
+            p Get the rank of a specific player.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+            p 
+                b Response: 
+                p The player's rank (integer).
+
+        li.docs 
+            pre.docs
+                | POST /players/:appID/player=:playerID/points/add
+            p Increment a player's points.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+                tr
+                    td amount
+                    td query
+                    td The number of points to add (default: 1).
+            p 
+                b Response: 
+                p The updated player object.
+
+        li.docs 
+            pre.docs
+                | POST /players/:appID/player=:playerID/points/reduce 
+            p Decrement a player's points.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+                tr
+                    td amount
+                    td query
+                    td The number of points to subtract (default: 1).
+            p 
+                b Response: 
+                p The updated player object.
+
+        li.docs 
+            pre.docs
+                | PUT /players/:appID/player=:playerID/points/set 
+            p Set a player's points to a specific value.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+                tr
+                    td amount
+                    td query
+                    td The new value for the player's points.
+            p 
+                b Response: 
+                p The updated player object.
+
+        li.docs 
+            pre.docs
+                | POST /players/:appID/create/player=:playerID 
+            p Create a new player.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+            p Request Body:
+            pre.docs
+                | {
+                |   "username": "optional" 
+                | } 
+            p The player's username (defaults to "New User").
+            pre.docs
+                | {
+                |   "playerPoints": "optional" 
+                | } 
+            p The initial player points (defaults to 0).
+            pre.docs
+                | {
+                |   "achievementIds": "optional" 
+                | } 
+            p An array of initial achievement IDs.
+            p 
+                b Response: 
+                p The newly created player object.
+
+        li.docs 
+            pre.docs
+                | DELETE /players/:appID/delete/player=:playerID 
+            p Delete a player.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+            p 
+                b Response: 
+                pre.docs { "value": true }
+
+        li.docs 
+            pre.docs
+                | PUT /players/:appID/player=:playerID/username/set 
+            p Set a player's username.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+                tr
+                    td username
+                    td query
+                    td The new username for the player.
+            p 
+                b Response: 
+                p The updated player object.
+
+    h3.docs Achievements
+    ul.docs
+
+        li.docs 
+            pre.docs
+                | GET /achievements/:appID 
+            p Get a list of all achievements for a specific app.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+            p 
+                b Response:
+                pre.docs
+                    | [
+                    |   {
+                    |     "achievementID": "achievement1",
+                    |     "title": "Achievement One",
+                    |     "pointsNeeded": 100,
+                    |     "playerIdsAchieved": ["player1", "player2"] 
+                    |   },
+                    |   {
+                    |     "achievementID": "achievement2",
+                    |     "title": "Achievement Two",
+                    |     "pointsNeeded": 50,
+                    |     "playerIdsAchieved": ["player1"] 
+                    |   }
+                    | ]
+
+        li.docs 
+            pre.docs
+                | GET /achievements/:appID/points=:points 
+            p Get an achievement by the required points.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td points
+                    td path
+                    td The number of points required for the achievement.
+            p 
+                b Response: 
+                p The achievement object.
+
+        li.docs 
+            pre.docs
+                | GET /achievements/:appID/title=:title 
+            p Get an achievement by its title (case-insensitive search).
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td title
+                    td path
+                    td The title of the achievement.
+            p 
+                b Response: 
+                p The achievement object.
+
+        li.docs 
+            pre.docs
+                | GET /achievements/:appID/player=:playerID/done 
+            p Get a list of achievements that the player has already completed.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+            p 
+                b Response: 
+                p An array of achievement objects.
+
+        li.docs 
+            pre.docs
+                | GET /achievements/:appID/player=:playerID/todo 
+            p Get a list of achievements that the player has not yet completed.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+            p 
+                b Response: 
+                p An array of achievement objects.
+
+        li.docs 
+            pre.docs
+                | GET /achievements/:appID/player=:playerID/check/:achievementID 
+            p Check if the player has completed a specific achievement.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+                tr
+                    td achievementID
+                    td path
+                    td The unique ID of the achievement.
+            p 
+                b Response: 
+                p `true` if the player has completed the achievement, `false` otherwise.
+
+        li.docs 
+            pre.docs
+                | PUT /achievements/:appID/player=:playerID/achievement=:achievementID/add 
+            p Add an achievement to a player.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+                tr
+                    td achievementID
+                    td path
+                    td The unique ID of the achievement.
+            p 
+                b Response: 
+                p The updated player object.
+
+        li.docs 
+            pre.docs
+                | PUT /achievements/:appID/player=:playerID/achievement=:achievementID/remove 
+            p Remove an achievement from a player.
+            table
+                tr
+                    th Parameter
+                    th Type
+                    th Description
+                tr
+                    td appID
+                    td path
+                    td The unique ID of the app.
+                tr
+                    td playerID
+                    td path
+                    td The unique ID of the player.
+                tr
+                    td achievementID
+                    td path
+                    td The unique ID of the achievement.
+            p 
+                b Response: 
+                p The updated player object.
