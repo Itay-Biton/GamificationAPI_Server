@@ -45,14 +45,14 @@ app.use('/', WebPortalRoutes)
 // Start the server
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
-  console.log(`Server running on https://gamificationsdk-server.onrender.com`)
+  console.log(`Server running on https://gamificationapi-server.onrender.com`)
 })
 
 // Function to send a keep-alive request to the server itself
 const sendKeepAliveRequest = async () => {
   if (process.env.KEEP_ALIVE === "KEEP_ALIVE")
     try {
-      const response = await axios.get(`https://gamificationsdk-server.onrender.com/health`)
+      const response = await axios.get(`https://gamificationapi-server.onrender.com/health`)
       console.log(`Keep-alive successful: ${response.status}`)
     } catch (error) {
       console.error('Keep-alive failed:', error.message)
