@@ -58,6 +58,27 @@ const getAchievementByTitle = async (req, res) => {
     }
 }
 
+
+// Get achievement by id
+const getAchievementByID = async (req, res) => {
+    const { appID, id } = req.params
+
+    try {
+        const achievement = await Achievement.findOne({
+            appID,
+            achievementID: id
+        })
+
+        if (!achievement) {
+            return res.status(404).json({ message: 'Achievement not found' })
+        }
+
+        res.json(achievement)
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
 // Get player's done achievements
 const getPlayerDoneAchievements = async (req, res) => {
     const { appID, playerID } = req.params
@@ -258,6 +279,7 @@ module.exports = {
     getAllAchievements,
     getAchievementByPoints,
     getAchievementByTitle,
+    getAchievementByID,
     getPlayerDoneAchievements,
     getPlayerTodoAchievements,
     checkPlayerAchievement,

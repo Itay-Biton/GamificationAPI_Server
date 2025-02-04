@@ -6,6 +6,7 @@ const {
   getAllAchievements,
   getAchievementByPoints,
   getAchievementByTitle,
+  getAchievementByID,
   getPlayerDoneAchievements,
   getPlayerTodoAchievements,
   checkPlayerAchievement,
@@ -24,6 +25,9 @@ router.get('/:appID/points=:points', validateRequest, getAchievementByPoints)
 
 // Get achievement by title
 router.get('/:appID/title=:title', validateRequest, getAchievementByTitle)
+
+// Get achievement by id
+router.get('/:appID/id=:id', validateRequest, getAchievementByID)
 
 // Get player's done achievements
 router.get('/:appID/player=:playerID/done', validateRequest, getPlayerDoneAchievements)
